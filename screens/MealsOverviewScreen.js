@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 
 import { MEALS, CATEGORIES } from "../data/dummy-data";
@@ -11,7 +11,7 @@ function MealsOverviewScreen({ route, navigation }) {
     return meal.categoryIds.indexOf(catId) >= 0;
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const categorySelected = CATEGORIES.find(
       (category) => category.id === catId
     );
@@ -23,6 +23,7 @@ function MealsOverviewScreen({ route, navigation }) {
     const item = itemData.item;
 
     const mealItemProps = {
+      id: item.id,
       title: item.title,
       imageUrl: item.imageUrl,
       duration: item.duration,
