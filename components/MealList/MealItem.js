@@ -9,7 +9,7 @@ import {
 
 import { useNavigation } from "@react-navigation/native";
 
-import MealDetail from "./MealDetail";
+import MealDetail from "../MealDetail";
 
 function MealItem({
   id,

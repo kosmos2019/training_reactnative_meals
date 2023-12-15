@@ -1,13 +1,7 @@
-import { useLayoutEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import {
-  Button,
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { Text, View, Image, StyleSheet, ScrollView } from "react-native";
 
 import { MEALS } from "../data/dummy-data";
 import MealDetail from "../components/MealDetail";
@@ -15,12 +9,28 @@ import Subtitle from "../components/MealDetail/Subtitle";
 import List from "../components/MealDetail/List";
 import IconButton from "../components/IconButton";
 
+// import { FavoritesContext } from "../store/context/favorites-context";
+import { addFavorite, removeFavorite } from "../store/redux/favorites";
+
 function MealDetailScreen({ route, navigation }) {
+  // const favoriteMealsProvider = useContext(FavoritesContext);
+  const favoriteMealsProvider = useSelector((state) => state.favoriteMeals);
+  const dispatch = useDispatch();
+
   const mealId = route.params.mealId;
+
   const selectedMeal = MEALS.find((m) => m.id === mealId);
 
-  function headerButtonPressHandler() {
-    console.log("Pressed!");
+  const mealIsFavorite = favoriteMealsProvider.ids.includes(mealId);
+
+  function changeFavoriteStatusHandler() {
+    if (mealIsFavorite) {
+      //favoriteMealsProvider.removeFavorite(mealId);
+      dispatch(removeFavorite({ id: mealId }));
+    } else {
+      // favoriteMealsProvider.addFavorite(mealId);
+      dispatch(addFavorite({ id: mealId }));
+    }
   }
 
   useLayoutEffect(() => {
@@ -28,14 +38,14 @@ function MealDetailScreen({ route, navigation }) {
       headerRight: () => {
         return (
           <IconButton
-            icon="star"
+            icon={mealIsFavorite ? "star" : "star-outline"}
             color="white"
-            onPress={headerButtonPressHandler}
+            onPress={changeFavoriteStatusHandler}
           />
         );
       },
     });
-  }, [navigation, headerButtonPressHandler]);
+  }, [navigation, changeFavoriteStatusHandler]);
 
   return (
     <ScrollView style={styles.rootContainer}>
